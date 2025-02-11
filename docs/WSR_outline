@@ -1,0 +1,297 @@
+wwWSR - outline
+Absolutely! Here’s a breakdown of the major concepts and tasks you'll need to tackle for your app. This will help you focus on each part step-by-step:
+
+1. Project Setup and Planning
+
+Define Tech Stack (e.g., Java for the backend, a JavaScript framework for the frontend like React, and music APIs like Spotify or Napster)
+Frontend:
+Vue.js is likely your best choice given your experience with React. It's easy to learn and implement, while still offering a lot of flexibility. Vue will help you build your app faster without the overhead of a heavier framework like Angular.
+
+Backend:
+Spring Boot is the obvious winner for your backend due to your Java experience, its integration with MariaDB, and its powerful features for REST APIs, security, and handling large-scale applications.
+
+Database:
+MariaDB remains the best choice for your relational database needs, especially since you’re already comfortable with it.
+
+Music API:
+spotify for now
+
+Create the Project Structure (separate modules for backend, frontend, audio management, etc.)
+1. Project Root Structure
+b/spotify-app
+├── /backend
+│   ├── /controllers
+│   │   ├── AdminController.java         
+│   │   ├── CompanyController.java       
+│   │   └── EmployeeController.java      
+│   ├── /services
+│   │   ├── UserService.java             
+│   │   ├── PlaylistService.java         
+│   │   ├── AudioService.java            
+│   │   ├── AdminService.java           
+│   │   └── AuthenticationService.java  
+│   ├── /models
+│   │   ├── User.java                   
+│   │   ├── Playlist.java               
+│   │   ├── AudioTrack.java             
+│   │   └── Role.java                   
+│   ├── /repositories
+│   │   ├── UserRepository.java         
+│   │   ├── PlaylistRepository.java     
+│   │   ├── AudioTrackRepository.java   
+│   │   └── RoleRepository.java         
+│   ├── /config
+│   │   ├── AppConfig.java              
+│   │   ├── SecurityConfig.java         
+│   │   ├── SpotifyAPIConfig.java       
+│   │   ├── DatabaseConfig.java         
+│   │   └── LoggingConfig.java          # Configuration for logging framework (logback, log4j, etc.)
+│   ├── /utils
+│   │   ├── JWTUtil.java                
+│   │   ├── PasswordUtil.java           
+│   │   ├── ApiResponse.java            
+│   │   └── DateUtil.java               
+│   ├── /exceptions
+│   │   ├── GlobalExceptionHandler.java  # Centralized exception handling
+│   │   ├── ApiException.java            # Custom exception for API errors
+│   │   └── InvalidInputException.java   # Specific exception for validation errors
+│   ├── /logs                           # Log files (created by logging framework)
+│   ├── /security
+│   │   ├── JwtTokenFilter.java          # Filter for JWT token validation
+│   │   ├── AuthEntryPoint.java          # Authentication entry point for handling unauthorized requests
+│   │   └── PermissionChecker.java       # Utility for permission checks (RBAC)
+│   ├── /healthcheck                    # For health-check endpoints (useful in prod)
+│   │   └── HealthCheckController.java  # Health check controller for ensuring app is up
+│   └── /metrics                        # Metrics for app monitoring (e.g., Prometheus)
+│       └── AppMetrics.java             # Handles application-specific metrics (e.g., number of requests)
+├── /frontend
+│   ├── /admin-portal
+│   │   ├── /components
+│   │   │   ├── Dashboard.js            
+│   │   │   ├── UserManagement.js       
+│   │   │   ├── Settings.js             
+│   │   │   └── Navigation.js           
+│   │   ├── /pages
+│   │   │   ├── DashboardPage.js        
+│   │   │   ├── UsersPage.js            
+│   │   │   └── SettingsPage.js         
+│   │   ├── /services
+│   │   │   ├── AdminService.js         
+│   │   │   └── AuthService.js          
+│   │   ├── /utils
+│   │   │   ├── ApiUtil.js              
+│   │   │   └── FormUtil.js             
+│   │   └── /error-handling
+│   │       ├── ErrorBoundary.js        # Error boundary for frontend error handling (e.g., React)
+│   │       └── ApiErrorHandler.js      # Global error handling for API responses
+│   ├── /company-portal
+│   │   ├── /components
+│   │   │   ├── PlaylistManager.js      
+│   │   │   ├── Analytics.js            
+│   │   │   └── TrackSearch.js          
+│   │   ├── /pages
+│   │   │   ├── PlaylistPage.js         
+│   │   │   ├── AnalyticsPage.js        
+│   │   │   └── TrackPage.js            
+│   │   ├── /services
+│   │   │   ├── PlaylistService.js      
+│   │   │   ├── AnalyticsService.js     
+│   │   │   └── TrackService.js         
+│   │   └── /utils
+│   │       ├── ApiUtil.js              
+│   │       └── ValidationUtil.js       
+│   │   └── /error-handling
+│   │       ├── ErrorBoundary.js        
+│   │       └── ApiErrorHandler.js      
+│   ├── /employee-portal
+│   │   ├── /components
+│   │   │   ├── UserDashboard.js        
+│   │   │   └── Support.js              
+│   │   ├── /pages
+│   │   │   ├── DashboardPage.js        
+│   │   │   └── SupportPage.js          
+│   │   ├── /services
+│   │   │   ├── SupportService.js       
+│   │   │   └── AuthService.js          
+│   │   └── /utils
+│   │       ├── ApiUtil.js              
+│   │       └── NotificationUtil.js     
+│   │   └── /error-handling
+│   │       ├── ErrorBoundary.js        
+│   │       └── ApiErrorHandler.js      
+│   └── /shared-components
+│       ├── /buttons
+│       │   └── Button.js               
+│       ├── /modals
+│       │   └── Modal.js                
+│       ├── /forms
+│       │   └── LoginForm.js            
+│       └── /utils
+│           ├── ApiUtil.js              
+│           └── FormUtil.js             
+├── /audio-management
+│   ├── /audio-player
+│   │   ├── Player.js                   
+│   │   ├── Controls.js                 
+│   │   └── TrackInfo.js                
+│   ├── /streaming
+│   │   ├── StreamingService.js         
+│   │   ├── PlaylistStream.js           
+│   │   └── AudioQueue.js               
+│   └── /utils
+│       ├── AudioUtil.js                
+│       └── StreamingUtil.js            
+├── /docs
+│   ├── /api
+│   │   ├── README.md                   
+│   │   ├── Authentication.md           
+│   │   └── Models.md                   
+│   ├── /frontend
+│   │   ├── AdminPortal.md              
+│   │   ├── CompanyPortal.md            
+│   │   ├── EmployeePortal.md           
+│   │   └── SharedComponents.md         
+│   ├── /deployment
+│   │   ├── Setup.md                    
+│   │   ├── Docker.md                   
+│   │   └── CloudSetup.md               
+│   ├── /testing
+│   │   ├── UnitTests.md                
+│   │   ├── IntegrationTests.md        
+│   │   └── EndToEndTests.md           
+│   └── README.md                       
+2. Backend Module
+This will handle all the API logic, database interactions, authentication, and authorization.
+
+Directory Structure:
+/controllers: Responsible for handling the incoming HTTP requests (routes for admin, company, and employee functionalities).
+/services: Business logic that communicates between controllers and models. For example, handling user management, data fetching, etc.
+/models: Contains the data models for things like users, permissions, audio tracks, playlists, etc.
+/repositories: Interfaces with the database (e.g., interacting with the Spotify API or your custom DB).
+/config: Configuration files (e.g., for environment variables, API keys, etc.).
+/utils: Helper functions, custom exceptions, and utility methods.
+3. Frontend Modules
+You’ll have three separate front-end modules (Admin Portal, Company Portal, and Employee Portal) that will communicate with your backend to manage different aspects of the system.
+
+a. Admin Portal
+This will be used by your company’s admins to control all aspects of the application.
+
+Features: User management, system monitoring, configuration settings, access control, etc.
+Tech Stack: React, Vue, or Angular (depending on your preference).
+Example Structure:
+bash
+Copy
+Edit
+/admin-portal
+├── /components
+├── /pages
+├── /services (to interact with backend API)
+└── /utils
+b. Company Portal
+This is for your company to manage Spotify playback (or any other company-related functions) and maintain customer-facing features.
+
+Features: Playlist management, controlling user preferences, analytics, etc.
+Tech Stack: React (for dynamic features), Axios (for API calls).
+Example Structure:
+bash
+Copy
+Edit
+/company-portal
+├── /components
+├── /pages
+├── /services (to interact with backend API)
+└── /utils
+c. Employee Portal
+Used by employees for day-to-day operations, such as managing user accounts or supporting customer interactions.
+
+Features: Basic data viewing, user support, and admin interaction.
+Tech Stack: Same as the others, e.g., React/Vue/Angular.
+Example Structure:
+bash
+Copy
+Edit
+/employee-portal
+├── /components
+├── /pages
+├── /services (to interact with backend API)
+└── /utils
+d. Shared Components
+For components that are reused across multiple portals (like headers, footers, or UI elements), you can create a shared library or component set.
+
+bash
+Copy
+Edit
+/shared-components
+├── /buttons
+├── /modals
+├── /forms
+└── /utils
+4. Audio Management Module
+Since your project involves integrating with Spotify, this module will focus on handling the playback of audio, streaming, and interactions with Spotify's Web Playback SDK.
+
+Directory Structure:
+/audio-player: This will manage the audio playback itself using the Spotify Web Playback SDK or any other custom player solution.
+/streaming: Handles streaming logic, including fetching tracks from the backend, managing playlists, etc.
+/utils: Helper functions related to audio processing, such as volume control, track info extraction, etc.
+Example structure:
+
+bash
+Copy
+Edit
+/audio-management
+├── /audio-player
+├── /streaming
+└── /utils
+5. Docs Directory
+To keep track of the project details, documentation, and setup instructions, you can have a /docs directory.
+
+Define User Stories & Features (based on the app's major functionalities)
+
+2. Music Service Integration
+Integrate Music APIs (Spotify/Napster):
+API key setup
+Authentication (OAuth2 for Spotify or other methods for Napster)
+Fetching songs, playlists, and metadata (e.g., explicit content flags)
+Playlist management (creating, modifying, and playing)
+
+3. Backend System Design
+Design and Implement Backend (Java Spring Boot or similar):
+User Authentication (QR code-based login)
+Location-based Account Management (assigning and managing accounts per location)
+Playlist Management (storing, rotating playlists, and pulling from music API)
+Audio Message Management (uploading and scheduling audio messages)
+Song Selection & Employee Input Handling (voting, flagging songs, adding to playlists)
+Database Design (storing user data, playlists, song selections, etc.)
+
+4. Frontend Development (User Interface)
+Employee Login Screen (QR code login and first-time setup)
+Song Search & Selection Interface (search for songs, display alternatives for flagged content)
+Playlist Display and Controls (show current playlist, allow song skipping or requesting new songs)
+Audio Message Display (listening to corporate messages between songs)
+User Feedback Mechanisms (song flagging, feedback on content)
+
+5. Audio Message Management
+Upload & Store Audio Messages (for HR guidelines, company-wide messages)
+Message Scheduling & Timing (insert messages at specific intervals between songs)
+Message Format (how messages are structured and played)
+
+6. Shift-Specific Playlist Management
+Shift-Based Playlist Creation (define playlists for each shift based on employee input)
+Playlist Rotation & Overlap (manage timing for smooth transitions between shifts)
+Song Pool Management (allow employees to add songs to a shared pool and ensure only non-explicit content)
+
+7. Admin Dashboard
+Monitor Playlists & Song Selections (view and adjust location-specific playlists)
+Insert Corporate Messages (add and schedule HR guidelines and location-specific messages)
+Analytics & Reporting (track employee song selections, flagging behavior, and message engagement)
+
+8. Testing and QA
+Unit Testing (test individual components like song fetching, playlist rotation, and message scheduling)
+Integration Testing (ensure everything works together, from song selection to message insertion)
+User Testing (test the interface with real users to ensure it’s intuitive)
+
+9. Deployment & Maintenance
+Set Up Deployment Pipeline (for both backend and frontend, e.g., using Docker, Kubernetes)
+Deploy App to Production (on a cloud platform like AWS, Heroku, etc.)
+Monitoring & Bug Fixing (set up logging, track errors, and update the app based on user feedback)
+This list should give you a roadmap for your app development. Each task can be broken down into smaller, manageable pieces. Focus on one area at a time, and don’t hesitate to ask for specific guidance as you move forward. You're well on your way!
