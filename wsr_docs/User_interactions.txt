@@ -1,0 +1,59 @@
+START
+│
+├── Login
+│ ├── Registration
+│ ├── Error → Retry Login
+│ ├── Success → Dashboard
+│
+├── Registration
+│ ├── Error → Retry Registration
+│ ├── Success → Auto-Login → Dashboard
+│
+├── Dashboard
+│ ├── Search
+│ ├── Profile
+│ │ ├── View Info
+│ │ ├── Update Info
+│ │ ├── Error → View Info
+│ │ ├── Success → View Info
+│ ├── Playlist
+│
+├Search
+│
+├── Type
+│ ├── Song
+│ ├── Genre
+│ ├── Artist
+│
+├── Success
+│ ├── Add Song to Personal Playlist
+│ ├── Search Again
+│
+├── Error: Not Found
+│ ├── Suggest Similar Songs/Artists
+│ ├── Retry Search
+│
+├── Error: Explicit Content
+│ ├── Block Song (Per Admin Guidelines)
+│ ├── Suggest Alternative Clean Versions
+│ ├── Retry Search
+│
+├── Playlist
+│ ├── View Company Playlist (Master List)
+│ │ ├── Filter: Genre, Most Played, Recently Added
+│ │ ├── Show Song Details (Who added it, how many users have it)
+│ │ ├── Suggest Removal (Admin Review)
+│ │ ├── Admin Approves → Remove from Company Pool
+│ │ ├── Admin Denies → Song Stays
+│
+│ ├── Add Song to Personal Playlist
+│ │ ├── Search for Song
+│ │ ├── Confirm Add
+│
+│ ├── Remove Song from Personal Playlist
+│ │ ├── If others have it → Remove only from personal list
+│ │ ├── If last person removing → Prompt: “This will remove it from the company pool. Continue?”
+│ │ ├── Yes → Remove from pool
+│ │ ├── No → Keep in personal list
+│
+END

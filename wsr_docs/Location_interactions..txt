@@ -1,0 +1,58 @@
+START
+
+Login
+    ├── Registration
+    │     ├── Error → Retry Registration
+    │     └── Success → Auto-Login → Dashboard
+    ├── Error → Retry Login
+    └── Success → Dashboard
+
+Registration
+    ├── Error → Retry Registration
+    └── Success → Auto-Login → Dashboard
+
+Dashboard
+    ├── Messages
+    │     ├── View Messages List
+    │     │     ├── Filter Messages (By Date, Type)
+    │     │     ├── View Message Details
+    │     │     └── Play Single Message Now
+    │     ├── Add New Message
+    │     │     ├── Schedule Message (Set Time, Recurrence)
+    │     │     └── Add Message to Pool
+    │     ├── Edit/Update Message
+    │     ├── Remove Message from Pool
+    │     │     └── Location-Specific Messages (Can Remove Location Messages Only)
+    │     └── Feedback on Messages
+    │           ├── Thumbs Up / Thumbs Down
+    │           ├── Leave Comments (For Improvement)
+    │           └── Flag Message (Needs Review)
+    ├── Flags
+    │     ├── View Flagged Songs
+    │     ├── Update Search Exclusions
+    │     ├── Remove Flagged Song from Playlist
+    │     └── Report Issues (For Admin Review)
+    ├── Play
+    │     ├── Playlist (Automated Play Process for Songs and Messages)
+    │     ├── Auto-Skip Repetitive Songs
+    │     └── Play Music Messages (Alternating)
+    ├── Employee Database Adjustment
+    │     ├── Pre-Register New Employee (for Login Verification)
+    │     ├── Remove Employee from DB
+    │     └── Edit Employee Shift Details
+    │           ├── Shift Details Auto-adjust Playlist Based on Shift Time
+    ├── Analytics (Role-Specific)
+    │     ├── Message Analytics (View Effectiveness, Engagement)
+    │     ├── Playlist Analytics (Most Played Songs, Skipped Songs)
+    │     ├── Employee Preferences (Most Liked Songs/Messages)
+    │     └── Flagged Song Reports
+    ├── Role-Based Access Control (RBAC)
+    │     ├── Admin View (Full Access: Edit, Delete, View Messages, Employees)
+    │     └── Location Manager View (Limited Access: Add/Remove Location-Specific Messages, View Playlist)
+    └── Settings
+          ├── Update Profile
+          ├── Manage Notifications (Email, SMS Alerts for Updates)
+          ├── Backup & Restore System (Backup Data, Restore Data)
+          └── Audio Quality Control Settings (Upload Audio Format, Quality Check)
+
+END
