@@ -1,0 +1,53 @@
+Checklist to Start Building the WorkSafe Radio App:https://chatgpt.com/c/67bddcb1-d36c-8010-b4c6-c68dc3ff58e7
+
+1. Define System Architecture:
+    Identify the major system components (e.g., frontend, backend, database, API).
+        - Front end: Vue.js
+        - backend: Spring Boot (Java)
+        - Database: PostgreSQL
+        - API: Spotify API
+    Define how employees, site admins, company admins, and account managers will interact with the system.(see use cases from functionality_outline.txt)
+
+2. Database Design:
+    Design the database schema, including tables for users, playlists, songs, flagged content, messages, and admin roles.
+    Ensure relationships between users, playlists, flagged content, and messages are well defined.
+    Consider database normalization and indexing for efficiency.
+
+3. Authentication & Authorization:
+    Set up employee registration and login, with email verification.
+    Implement role-based access control (RBAC) for site admins, company admins, and account managers.
+    Ensure that employees have the correct permissions for their actions (e.g., flagging content, managing playlists).
+
+4. Song Search & Content Filtering:
+    Integrate with the Spotify API to search for songs by genre, artist, or title.
+    Implement content filtering logic to check if songs pass the content check (flagged terms, clean versions, etc.).
+    Add the ability to search for radio-friendly or clean versions of songs.
+
+5. Playlist Management:
+    Implement personal playlists for employees and allow them to add/remove songs.
+    Implement site-specific playlists with shift-based allocation and pre-approved songs.
+    Implement playlist randomization, genre/artist balancing, and automatic message integration between songs.
+
+6. Flagging & Moderation:
+    Create a flow for employees to flag songs and for site admins to review flagged songs.
+    Implement logs for transparency, with notifications to admins when a song is flagged.
+    Implement multiple flag review logic (e.g., prioritizing flagged songs).
+
+7. Audio Message Management:
+    Allow admins to create, upload, and categorize site-specific and company-wide messages.
+    Implement an approval process with automated content checks for messages.
+    Implement scheduling and automated playback of messages at set intervals within the playlist.
+
+8. Admin Management & Reporting:
+    Implement admin functionalities to manage employees, playlists, flagged content, and messages.
+    Implement role-based access for site admins, company admins, and account managers.
+    Ensure all moderation actions (song flags, message removals, etc.) are logged for audit purposes.
+
+9. Subscription & Billing (for Account Manager):
+    Integrate subscription and billing functionalities for companies.
+    Ensure account managers can manage company accounts, including suspensions, reactivation, and invoicing.
+
+10. Compliance & Audit Logs:
+    Implement logs for flagged songs, message approvals, and admin actions.
+    Allow admins to export log data for compliance reporting.
+    Archive past logs for historical tracking.

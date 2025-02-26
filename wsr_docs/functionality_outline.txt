@@ -1,0 +1,252 @@
+WorkSafe Radio - Use Cases
+Client Users:
+- Employees
+- Site Administrators
+- Company Administrators
+
+Service Users:
+- Account Manager
+
+Employee Use Cases:
+
+1. Employee Registration & Authentication:
+- Employees can register for the service.
+- Employees will receive an email with a confirmation link upon registration.
+- Employees must confirm registration via email before logging in.
+- Employees can log in to the service.
+
+2. Employee Profile Management:
+- Employees can view and edit their profile.
+
+3. Employees can view currently playing song:
+- Employees can view the currently playing song on the site playlist.
+- Employees can view the song details (e.g., artist, album, release date, genre).
+- Employees can view the song progress (e.g., time elapsed, time remaining).
+
+3. Personal Playlist Management:
+- Employees can add songs to their personal playlist.
+- Employees can delete songs from their personal playlist.
+- Employees can view their personal playlist.
+- Employees can filter their playlist by genre, artist, or song title.
+
+4. Song Search & Selection:
+- Employees can search for songs by genre, artist, or song title.
+- Employees can view search results.
+- Employees will be able to play 30sec previews of songs from search results.
+- Employees can add songs from search results to their playlist.
+- Employees can view song details (e.g., artist, album, release date, genre).
+
+5. Flagging & Content Moderation:
+- Employees can flag songs for review if they contain inappropriate content.
+- Employees can view previously flagged songs (for transparency).
+
+Site Administrator Use Cases:
+
+1. User & Employee Management:
+- Site administrators can pre-register employees.
+- Site administrators can remove employees from the system.
+- Site administrators can view employee profiles.
+- Site administrators can view employee playlists.
+
+2. Site Playlist Management:
+- Site administrators can start the site playlist.
+- Site administrators can stop the site playlist.
+
+3. Flagged Content Review:
+- Site administrators can view flagged songs.
+- Site administrators can remove flagged songs after review.
+
+4. Site-Specific Audio Messages:
+- Site administrators can create site-specific audio messages for employees.
+- Site administrators can edit site-specific audio messages.
+- Site administrators can delete site-specific audio messages.
+- Site administrators can view site-specific audio messages.
+- Site administrators can search site-specific audio messages by category (e.g., holiday, safety, HR).
+
+5. Company-Wide Audio Messages:
+- Site administrators can view company-wide audio messages.
+- Site administrators can search company-wide audio messages by category (e.g., holiday, safety, HR).
+- Site administrators can flag company-wide audio messages for review.
+
+Company Administrator Use Cases:
+
+1. Playlist & Flagged Content Management:
+- Company administrators can view all site playlists.
+- Company administrators can view all flagged songs.
+- Company administrators can remove flagged songs after review.
+
+2. Site-Specific Audio Message Management:
+- Company administrators can view all site-specific audio messages.
+- Company administrators can edit site-specific audio messages.
+- Company administrators can remove site-specific audio messages.
+
+3. Company-Wide Audio Message Management:
+- Company administrators can view all company-wide audio messages.
+- Company administrators can edit company-wide audio messages.
+- Company administrators can remove company-wide audio messages.
+- Company administrators can create new company-wide audio messages.
+- Company administrators can delete company-wide audio messages.
+- Company administrators can search company-wide audio messages by category (e.g., holiday, safety, HR).
+
+4. Employee & Site Administrator Management:
+- Company administrators can view all employees.
+- Company administrators can remove employees from the system.
+- Company administrators can view all site administrators.
+- Company administrators can remove site administrators.
+
+5. Content Filter Management:
+- Company administrators can adjust content filters for flagged songs.
+- Company administrators can view active content filters.
+- Company administrators can remove content filters.
+- Company administrators can add new content filters.
+
+Account Manager Use Cases:
+
+1. Company Account Management:
+- Create new company accounts for businesses using the service.
+- Edit company account details (e.g., company name, subscription tier, contact info).
+- Suspend or deactivate company accounts.
+- Reactivate suspended company accounts.
+- Delete company accounts if necessary.
+
+2. Site & Company Administrator Management:
+- Assign site administrators to a company.
+- Assign company administrators to a company.
+- Remove or reassign site/company administrators.
+
+3. Employee Account Management (for All Companies):
+- View all employees across all companies.
+- Suspend or reactivate employee accounts.
+- Remove employees from a company if needed.
+- Reset passwords for employees.
+
+4. Playlist & Content Moderation:
+- View all flagged songs across all companies.
+- Remove flagged songs if they violate policies.
+- Monitor site playlists and ensure compliance.
+- View and moderate company-wide audio messages.
+- Flag or remove inappropriate company-wide messages.
+
+5. Content Filter & Policy Management:
+- Set global content filters for all companies.
+- Allow companies to customize their own filters.
+- Edit or remove existing content filters.
+
+6. Subscription & Billing Management
+- View company subscription status (e.g., free, premium, enterprise).
+- Upgrade or downgrade company plans.
+- Suspend accounts for non-payment.
+- Generate invoices or payment reminders.
+
+7. Compliance & Audit Logs:
+- View history of flagged content and moderation actions.
+- Generate reports on content flags, employee activity, and compliance trends.
+- Track company usage (e.g., number of employees, playlist data, flagged content).
+
+
+
+Song Search Flow:
+
+1. Search Functionality:
+- Search by: Genre, Artist, or Song Title.
+- employees can filter search results based on preferences (such as avoiding specific terms), which will allow them to personalize their experience.
+    Search Results:
+        - Display song details: Song Title, Artist, Genre.
+        - Option to play preview (via Spotify API) and view details (e.g., album, release date).
+2. Content Check:
+    Passes Content Check:
+        - Display the results with options to play preview and add to personal playlist.
+    Fails Content Check:
+        - Providing clear reasoning when a song fails the content check can enhance transparency and help users understand the filtering process.
+        - Automatically search for clean/radio-friendly versions of the song.
+        - If no clean version is found, display a suggested list of radio-friendly songs based on genre and artist that pass the content check.
+3. Song Preview:
+- Preview: Play a 30-second preview of the song via the Spotify API.
+- Song Details: Display additional song info like artist, album, release date, and genre.
+4. Re-Search for Clean Versions:
+- If the song fails the content check, an automatic re-search will be triggered for a clean/radio-friendly version.
+- If no clean version is found, the system will suggest other radio-friendly songs based on genre and artist that pass the content filter.
+5. Suggested List for Clean Versions:
+- The system will suggest radio-friendly songs based on genre and artist only when the initial song fails the content check and no clean version is found.
+- These suggestions will come from the songs that pass the content filter.
+
+Flagging & Moderation Flow:
+
+1. Flagging a Song:
+- Employees can flag a song if they believe it contains inappropriate or offensive content.
+- A song can be flagged once per employee.
+2. Flagged Content Review:
+    Site Admin Review:
+        - The site admin will receive notification when a song is flagged and start the review process.
+        - The flagged song will undergo an additional content check to verify whether it contains inappropriate material.
+        - If the song fails the content check, the site admin can remove the song from the playlist/system.
+        - If the song passes the content check, the flag will be removed, and the song will remain in the system.
+3. Flagged Content Log:
+    Log of Flagged Songs:
+        - A comprehensive log of all flagged songs will be maintained by the system for transparency.
+        - The log will include the song title, employee who flagged it, and the status (whether the song was removed or retained).
+    Site Admin Access:
+    - Site admins can view the flagged content log, including the status of each flagged song (removed or retained).
+    - Admins can also filter the log based on the flagged status to identify potential patterns of inappropriate content.
+4. Multiple Flags:
+    If a song is flagged multiple times by different employees:
+        - The song will undergo a more thorough review process by the site admin.
+        - If the song is flagged by multiple employees, both the company admin and site admin will receive a notification for immediate review.
+        - Admins can prioritize songs flagged by multiple users to expedite the review process.
+5. Flagging of Already Approved Songs:
+    If the song passed the additional content check previously:
+        - Employees will not be able to flag that song again.
+        - This helps prevent spam flagging or false flagging.
+        - The system will track the status of flags to ensure songs cannot be continuously flagged by the same employee after being cleared.
+
+
+Playing site playlist:
+1. Site Admin Start Playlist:
+- Site admins can start the site playlist, which will play for all employees.
+2. The playlist will allocate songs based on:
+    A. personal playlists:
+        - songs will be added to the playlist based on the employees assigned to shift blocks.
+        - any duplicate songs will only be stored once with a counter for each personal playlist it appears in.
+        - when shift changes songs counter will be readjusted based on the outgoing and incoming employees. if the count reaches 0 the song will be removed from the playlist.
+    B. pre-approved songs:
+        - songs that have been pre-approved by the site admin will be added to the playlist.
+        - only if the number of employee selected songs fall below a certain threshold.
+3. Order of songs played:
+- to ensure fairness, the system will randomize the order of songs played.
+- the system will also ensure that no artist or genre is over-represented in the playlist.
+4. messages:
+- site-specific messages will be played after 3 songs and company-wide messages will be played after 5 songs.
+- the system will ensure that the messages are played in a way that does not interrupt the flow of the playlist.
+5. Site Admin Stop Playlist:
+- Site admins can stop the site playlist at any time.
+- The playlist will be paused and can be resumed at a later time.
+
+messages workflow:
+1. Message Creation:
+- admins will be able to upload or record audio messages.
+- messages can be categorized as site-specific or company-wide.
+- admins can add a description or title to the message.
+2. Message Approval:
+- site admins will review and approve messages before they are added to the system.
+- Content Check Automation: Implement an automated content-checking tool for flagged words or phrases before reaching the approval stage.
+- messages will undergo a content check to ensure they meet the company's guidelines.
+3. Message Scheduling:
+- site-specific messages will be played after a certain number of songs, while company-wide messages will be played after a different number of songs.
+4. Message Playback:
+- messages will be played in between songs to ensure they do not interrupt the flow of the playlist.
+- the system will ensure that messages are played at appropriate intervals and do not overlap with other messages.
+5. Message Removal:
+- admins can remove messages from the system if they are no longer relevant or appropriate.
+- removed messages will be stored in an archive for future reference.
+6. categorized messages:
+- messages can be categorized based on their content (e.g., holiday, safety, HR).
+- admins can filter messages based on categories to find specific messages quickly.
+7. message history:
+- Compliance Export Options: When exporting message history for audit purposes, allow for different formats (e.g., PDF, CSV, Excel) to suit various compliance requirements.
+- the system will maintain a log of all messages, including the date, time, and content of each message.
+- admins can review the message history to track the playback of messages and ensure compliance with company guidelines.
+- the message history log will also include any actions taken on messages (e.g., approval, removal).
+- the message history log will be accessible to site(view only for non-site) admins, company admins, and account managers.
+- the message history log will be searchable by date, category, or message content.
+- the message history log will be exportable for compliance and audit purposes.
+- the message history log will be archived for future reference and compliance tracking.
