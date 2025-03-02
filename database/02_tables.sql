@@ -81,6 +81,17 @@ CREATE TABLE IF NOT EXISTS
         CHECK (location_end_time > location_start_time) -- Ensures end time is after start time, kept for location-level validation
     );
 
+-- Create an audit table for tracking changes on the location table
+CREATE TABLE IF NOT EXISTS
+    location_audit (
+        audit_id BIGSERIAL PRIMARY KEY,
+        location_id UUID NOT NULL,
+        operation CHAR(1) NOT NULL, -- 'I' = Insert, 'U' = Update, 'D' = Delete
+        changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        old_values JSONB,
+        new_values JSONB
+    );
+
 -- User table: Stores employees pre-registered by the company
 CREATE TABLE IF NOT EXISTS
     "user" (
@@ -95,9 +106,19 @@ CREATE TABLE IF NOT EXISTS
         user_status user_status NOT NULL DEFAULT 'pending', -- Registration status (pending, registered, unregistered)
         password_hash TEXT NOT NULL, -- Hash of the default password set during pre-registration
         employee_id VARCHAR(50) UNIQUE NOT NULL, -- Company-issued employee ID, must be unique
-        approved_by UUID REFERENCES "user" (user_id) ON DELETE SET NULL, -- Optional: ID of the user who approved this employee
-        approved_at TIMESTAMP, -- Optional: Timestamp when approval occurred
         qr_code_used VARCHAR(50) REFERENCES location (qr_code) ON DELETE SET NULL -- Tracks QR code scanned for setup, nullable
+    );
+
+-- Create the audit table to track changes for the user table
+CREATE TABLE IF NOT EXISTS
+    user_audit (
+        audit_id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (), -- Unique identifier for the audit record
+        action_type VARCHAR(20) NOT NULL, -- Action type (INSERT or UPDATE)
+        user_id UUID NOT NULL REFERENCES "user" (user_id), -- The user being updated
+        changed_by UUID REFERENCES "user" (user_id), -- User who made the change
+        change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Time of change
+        old_data JSONB, -- Old data (before update)
+        new_data JSONB -- New data (after update)
     );
 
 -- User_shifts table: Tracks each user’s shift schedule for dynamic playlist updates
@@ -139,6 +160,19 @@ CREATE TABLE IF NOT EXISTS
         genre_id UUID REFERENCES genres (genre_id) ON DELETE SET NULL, -- Links to genre, nullable if genre is deleted
         is_clean BOOLEAN NOT NULL DEFAULT FALSE, -- Indicates if the song is HR-compliant
         track_id VARCHAR(50) UNIQUE NOT NULL -- Spotify track ID for API playback (e.g., "6rqhFgbbKwnb9MLmUQDhG8")
+    );
+
+-- Flagging table: Tracks flags for songs
+CREATE TABLE IF NOT EXISTS
+    song_flags (
+        flag_id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (), -- Unique identifier for each flag
+        song_id BIGINT NOT NULL REFERENCES song (song_id) ON DELETE CASCADE, -- Links to song
+        user_id UUID NOT NULL REFERENCES "user" (user_id) ON DELETE SET NULL, -- User who flagged the song
+        flagged_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the song was flagged
+        flag_status flag_status DEFAULT 'pending', -- Status of the flag (pending, reviewed, dismissed)
+        review_comment TEXT, -- Optional comment by the reviewer
+        reviewed_by UUID REFERENCES "user" (user_id) ON DELETE SET NULL, -- User who reviewed the flag (optional)
+        reviewed_at TIMESTAMP -- Timestamp when the flag was reviewed (optional)
     );
 
 -- Company_messages table: Stores company-wide messages for commercial breaks

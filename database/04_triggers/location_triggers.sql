@@ -1,19 +1,5 @@
 BEGIN;
 
---------------------------------------------------
--- Audit Table and Trigger for the Location Table
---------------------------------------------------
--- Create an audit table for tracking changes on the location table
-CREATE TABLE IF NOT EXISTS
-    location_audit (
-        audit_id BIGSERIAL PRIMARY KEY,
-        location_id UUID NOT NULL,
-        operation CHAR(1) NOT NULL, -- 'I' = Insert, 'U' = Update, 'D' = Delete
-        changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        old_values JSONB,
-        new_values JSONB
-    );
-
 -- Drop the audit trigger if it already exists
 DROP TRIGGER IF EXISTS trigger_location_audit ON location;
 

@@ -96,4 +96,16 @@ CREATE INDEX IF NOT EXISTS idx_company_messages_company_id ON company_messages (
 -- Purpose: Speeds up lookups and joins for location-specific messages
 CREATE INDEX IF NOT EXISTS idx_location_messages_location_id ON location_messages (location_id);
 
+-- Index on song_id for quick lookups of flagged songs
+CREATE INDEX IF NOT EXISTS idx_song_flags_song_id ON song_flags (song_id);
+
+-- Index on user_id for quick lookups of flags by a specific user
+CREATE INDEX IF NOT EXISTS idx_song_flags_user_id ON song_flags (user_id);
+
+-- Index on status for quick filtering of flagged songs by their review status
+CREATE INDEX IF NOT EXISTS idx_song_flags_status ON song_flags (status);
+
+-- Index on flagged_at for efficient retrieval of recent flags
+CREATE INDEX IF NOT EXISTS idx_song_flags_flagged_at ON song_flags (flagged_at);
+
 COMMIT;
