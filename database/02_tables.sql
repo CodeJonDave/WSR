@@ -54,6 +54,17 @@ CREATE TABLE IF NOT EXISTS
         message_interval INT DEFAULT 5 CHECK (message_interval >= 1) -- Frequency of message breaks (e.g., every 5 songs)
     );
 
+-- Company_audit table: Tracks changes to company records for auditing purposes
+CREATE TABLE IF NOT EXISTS
+    company_audit (
+        audit_id BIGSERIAL PRIMARY KEY,
+        company_id UUID NOT NULL,
+        operation CHAR(1) NOT NULL, -- 'I' = Insert, 'U' = Update, 'D' = Delete
+        changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        old_values JSONB,
+        new_values JSONB
+    );
+
 -- Location table: Represents company locations, each acting as a unique station with operational hours
 CREATE TABLE IF NOT EXISTS
     location (

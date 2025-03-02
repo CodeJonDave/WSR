@@ -5,7 +5,13 @@ DROP TRIGGER IF EXISTS trigger_update_company_timestamp ON company;
 
 DROP TRIGGER IF EXISTS trigger_auto_update_subscription_status ON company;
 
-DROP TRIGGER IF EXISTS trigger_auto_inactivate_company_with_grace_period ON company;
+DROP TRIGGER IF EXISTS trigger_log_account_manager_change ON company;
+
+DROP TRIGGER IF EXISTS trigger_company_audit ON company;
+
+DROP TRIGGER IF EXISTS trigger_prevent_company_name_change ON company;
+
+DROP TRIGGER IF EXISTS trigger_reactivate_subscription_status ON company;
 
 -- Function to update company.updated_at timestamp
 CREATE
@@ -24,14 +30,14 @@ CREATE TRIGGER trigger_update_company_timestamp BEFORE
 UPDATE ON company FOR EACH ROW
 EXECUTE FUNCTION update_company_timestamp ();
 
--- Function to manage subscription_status with payment interval and last_payment_date
+-- Function to manage subscription_status based on payments
 CREATE
 OR
 REPLACE
     FUNCTION auto_update_subscription_status () RETURNS TRIGGER AS $$ BEGIN
-    -- Extend subscription_end_date based on last_payment_date if it’s more recent
+    -- Extend subscription_end_date based on last_payment_date if it's newer
     IF NEW.last_payment_date IS NOT NULL
-    AND NEW.last_payment_date > NEW.subscription_end_date THEN IF NEW.payment_interval = 'monthly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '1 month';
+    AND NEW.last_payment_date > OLD.subscription_end_date THEN IF NEW.payment_interval = 'monthly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '1 month';
 
 ELSIF NEW.payment_interval = 'quarterly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '3 months';
 
@@ -41,30 +47,26 @@ END IF;
 
 END IF;
 
--- Update subscription_status based on dates
-IF NEW.subscription_end_date < CURRENT_DATE THEN
--- Check grace period (5 days post-interval)
+-- Determine subscription status
+IF NEW.subscription_end_date >= CURRENT_DATE THEN NEW.subscription_status = 'active';
+
+-- Fully paid up
+ELSIF NEW.subscription_end_date < CURRENT_DATE THEN
+-- Grace period (5 days after interval)
 IF NEW.payment_interval = 'monthly'
-AND NEW.subscription_end_date + INTERVAL '1 month 5 days' < CURRENT_DATE THEN NEW.subscription_status = 'inactive';
+AND NEW.subscription_end_date + INTERVAL '1 month 5 days' >= CURRENT_DATE THEN NEW.subscription_status = 'pending';
 
 ELSIF NEW.payment_interval = 'quarterly'
-AND NEW.subscription_end_date + INTERVAL '3 months 5 days' < CURRENT_DATE THEN NEW.subscription_status = 'inactive';
+AND NEW.subscription_end_date + INTERVAL '3 months 5 days' >= CURRENT_DATE THEN NEW.subscription_status = 'pending';
 
 ELSIF NEW.payment_interval = 'yearly'
-AND NEW.subscription_end_date + INTERVAL '1 year 5 days' < CURRENT_DATE THEN NEW.subscription_status = 'inactive';
+AND NEW.subscription_end_date + INTERVAL '1 year 5 days' >= CURRENT_DATE THEN NEW.subscription_status = 'pending';
 
-ELSE NEW.subscription_status = 'pending';
+ELSE NEW.subscription_status = 'inactive';
 
--- Still in grace period
+-- Past due & past grace period
 END IF;
 
-ELSIF NEW.subscription_start_date <= CURRENT_DATE
-AND NEW.subscription_end_date >= CURRENT_DATE THEN NEW.subscription_status = 'active';
-
--- Within active period
-ELSE NEW.subscription_status = 'pending';
-
--- Before start or in limbo
 END IF;
 
 RETURN NEW;
@@ -73,12 +75,12 @@ END;
 
 $$ LANGUAGE plpgsql;
 
--- Trigger to update subscription_status before updates
+-- Trigger to auto-update subscription_status before updates
 CREATE TRIGGER trigger_auto_update_subscription_status BEFORE
 UPDATE ON company FOR EACH ROW
 EXECUTE FUNCTION auto_update_subscription_status ();
 
--- Function to log account manager changes for audit
+-- Function to log account manager changes for auditing
 CREATE
 OR
 REPLACE
@@ -97,16 +99,16 @@ END;
 
 $$ LANGUAGE plpgsql;
 
--- Trigger to log account manager changes after updates
+-- Trigger to log account manager changes
 CREATE TRIGGER trigger_log_account_manager_change AFTER
 UPDATE ON company FOR EACH ROW
 EXECUTE FUNCTION log_account_manager_change ();
 
--- Trigger function to log changes
+-- Function to log changes for auditing purposes
 CREATE
 OR
 REPLACE
-    FUNCTION company_audit_trigger () RETURNS TRIGGER AS $$ BEGIN IF(TG_OP = 'INSERT') THEN
+    FUNCTION company_audit_trigger () RETURNS TRIGGER AS $$ BEGIN IF TG_OP = 'INSERT' THEN
 INSERT INTO
     company_audit (company_id, operation, new_values)
 VALUES
@@ -118,7 +120,7 @@ VALUES
 
 RETURN NEW;
 
-ELSIF (TG_OP = 'UPDATE') THEN
+ELSIF TG_OP = 'UPDATE' THEN
 INSERT INTO
     company_audit (company_id, operation, old_values, new_values)
 VALUES
@@ -131,7 +133,7 @@ VALUES
 
 RETURN NEW;
 
-ELSIF (TG_OP = 'DELETE') THEN
+ELSIF TG_OP = 'DELETE' THEN
 INSERT INTO
     company_audit (company_id, operation, old_values)
 VALUES
@@ -149,12 +151,76 @@ END;
 
 $$ LANGUAGE plpgsql;
 
--- Create trigger to log audit records after any DML on company
+-- Trigger to log audit records after any DML on company
 CREATE TRIGGER trigger_company_audit AFTER
 INSERT
     OR
 UPDATE
 OR DELETE ON company FOR EACH ROW
 EXECUTE FUNCTION company_audit_trigger ();
+
+-- Function to prevent company_name changes
+CREATE
+OR
+REPLACE
+    FUNCTION prevent_company_name_change () RETURNS TRIGGER AS $$ BEGIN IF TG_OP = 'UPDATE'
+    AND OLD.company_name IS DISTINCT
+FROM
+    NEW.company_name THEN RAISE EXCEPTION 'Changing the company_name is not allowed';
+
+END IF;
+
+RETURN NEW;
+
+END;
+
+$$ LANGUAGE plpgsql;
+
+-- Trigger to prevent company_name updates
+CREATE TRIGGER trigger_prevent_company_name_change BEFORE
+UPDATE ON company FOR EACH ROW
+EXECUTE FUNCTION prevent_company_name_change ();
+
+-- Function to reactivate subscription when a payment is made
+CREATE
+OR
+REPLACE
+    FUNCTION reactivate_subscription_status () RETURNS TRIGGER AS $$ BEGIN
+    -- Ensure last_payment_date is updated and after the current subscription_end_date
+    IF NEW.last_payment_date IS NOT NULL
+    AND NEW.last_payment_date > OLD.subscription_end_date THEN
+    -- Extend subscription_end_date based on payment interval
+    IF NEW.payment_interval = 'monthly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '1 month';
+
+ELSIF NEW.payment_interval = 'quarterly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '3 months';
+
+ELSIF NEW.payment_interval = 'yearly' THEN NEW.subscription_end_date = NEW.last_payment_date + INTERVAL '1 year';
+
+END IF;
+
+-- Reactivate subscription if valid
+IF NEW.subscription_end_date >= CURRENT_DATE THEN NEW.subscription_status = 'active';
+
+ELSE NEW.subscription_status = 'pending';
+
+-- Payment made but still within grace period
+END IF;
+
+END IF;
+
+RETURN NEW;
+
+END;
+
+$$ LANGUAGE plpgsql;
+
+-- Trigger to update subscription_status upon payment update
+CREATE TRIGGER trigger_reactivate_subscription_status BEFORE
+UPDATE ON company FOR EACH ROW WHEN (
+    OLD.last_payment_date IS DISTINCT
+    FROM
+        NEW.last_payment_date
+)
+EXECUTE FUNCTION reactivate_subscription_status ();
 
 COMMIT;
