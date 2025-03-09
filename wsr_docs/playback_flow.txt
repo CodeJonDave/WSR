@@ -1,0 +1,43 @@
+🎵 Playback Flow (Revised, March 08, 2025)
+(Changes: Added empty playlist fallback, intercom overlap rule, skip empty messages, volume persistence, Spotify retry, time zone match.)
+
+Admin Login
+Action: Admin/site_admin logs in.
+Outcome: Triggers playback setup.
+
+Playback Setup (Automated)
+Check On-Shift Employees:
+Compares current time (job site’s local time zone, e.g., EST) to Start Time/End Time.
+Lists employees where Start Time ≤ current time and End Time > current time (or unset).
+
+Build Site Playlist:
+Merges unique songs from on-shift employees’ playlists.
+If empty: Uses a generic safe playlist (e.g., pre-set non-explicit songs).
+Generate Genre List:
+Extracts genres from site playlist (or generic playlist if empty).
+Update Loop:
+Refreshes every 15 minutes based on local time zone.
+
+Playback Starts
+Action: Clicks "Start."
+Song Selection:
+Random genre → random song → check "Already Played List" (pass: play, fail: retry).
+Resets every 2 hours.
+
+Message Insertion:
+Every 5 songs, picks random message from library; skips if empty.
+Feedback: "Playlist updated" every 15 min.
+
+Spotify API Failure: Retries 3 times, then skips song if unavailable.
+
+Intercom Use
+Action: Clicks "Intercom On."
+Process: Music fades down; mic streams live.
+Overlap Rule: If already active, shows "Intercom in use."
+End: Clicks "Intercom Off," music fades up.
+
+Playback Control
+Action: Stop or adjust volume (persists across sessions).
+Outcome: "Playlist stopped" on pause.
+
+Key Highlights: Generic playlist fallback, skips empty messages, volume persists, Spotify retry, local time zone.

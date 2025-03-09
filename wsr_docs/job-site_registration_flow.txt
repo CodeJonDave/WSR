@@ -1,0 +1,35 @@
+🏢 Job Site Registration Flow (Updated March 08, 2025)
+(Changes: Emphasized only site_admin is set, job_site_id is the sole link to employee flow.)
+
+Job Site Initiates Registration
+Action: Representative visits public registration page.
+Outcome: Prompted to create a job site account.
+
+Job Site Account Setup
+Information Provided:
+Company Name: e.g., "Acme Corp."
+Job Site Name: e.g., "Acme Corp - South Plant."
+Contact Email: For notifications and site_admin.
+Phone Number: For verification/support.
+Address: e.g., "456 Factory Lane."
+Default Shift Times: e.g., 9:00 AM - 5:00 PM.
+Initial Site Admin Details:
+First Name, Last Name
+Admin Email
+Password
+Action: Submits form.
+Outcome: Generates job_site_id, assigns site_admin role.
+
+Account Verification
+Action: Verification email sent to Admin Email.
+Outcome: Site_admin clicks link to activate.
+
+QR Code Generation & Employee Pre-Fill
+Action: Generates QR code for job_site_id
+Outcome: QR downloadable/shareable; pre-fill stored for employee use.
+
+Registration Complete
+Action: Site_admin logs in.
+Outcome: Sees confirmation with Company Name, Job Site Name, Default Shift Times, Employee Count, QR code.
+
+Key Highlights: Only site_admin set; job_site_id links to employee flow, no other site info used.

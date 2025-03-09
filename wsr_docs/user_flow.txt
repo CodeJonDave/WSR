@@ -1,0 +1,49 @@
+🎶 Employee Flow (Updated March 08, 2025)
+(Changes: Clarified email source and removed unused site info pre-fill.)
+
+Scan QR Code & Registration
+Action: Employee scans a job site-specific QR code.
+Outcome: Redirected to registration page with "Welcome to [Company Name]! Register to begin" for first-timers. QR failure offers manual job site code entry or support contact.
+
+Registration Page
+Pre-added Information:
+job_site_id: Set from QR code.
+role: Fixed as "employee."
+User-Provided Information:
+First Name, Last Name: Editable, requires site_admin approval for changes.
+Start Time, End Time: Editable by user.
+Email: User enters this (not pre-filled unless set by site_admin later).
+Password: User sets to complete registration.
+Action: Submits form once required fields are filled.
+
+Redirect to Login
+Outcome: Redirected to sign-in page with "Registration complete! Please log in."
+Action: Logs in with email and password; "Forgot Password" link available.
+
+Welcome Page
+Outcome: Links to Profile Page, Personal Playlist, "Add Your First Song Now!" button, and tip: "Explore your playlist or update your profile."
+Action: Navigates to desired section.
+
+Onboarding Step
+Outcome: First-timers see a tour: "Update your profile," "Add playlist songs," "Contact your job site admin for support." Name managed by site_admin.
+Action: Skip or complete tour, proceeds to Welcome Page.
+
+Profile Page
+View Profile Info:
+Name: Editable with "Submit for admin approval."
+Role: Fixed as "employee."
+Job Site Name: From job_site_id.
+Start Time, End Time: User-editable.
+Email: User can update.
+Preferences: Auto-generated from playlist; prompts genre pick if empty.
+Action: Updates email/password trigger "Change saved!"
+
+Personal Playlist
+View Playlist: Lists songs with "Delete"; if empty, "No songs yet—search to add some!"
+Search in Playlist: Filter by Song Title or Genres.
+Action: Sort by date added or alphabetically.
+
+Search Songs (Spotify API)
+Search Filters: Song Title, Artist, Genres; excludes explicit lyrics; "Song added!" on add.
+
+Key Highlights: Email user-set, only job_site_id from site registration used, site_admin oversees Name.

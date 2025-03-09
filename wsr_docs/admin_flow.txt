@@ -1,0 +1,24 @@
+🎛️ Admin Workflow (March 08, 2025)
+(No changes needed—already aligns with your clarifications.)
+
+Login
+Action: Site_admin or admin logs in via web app.
+Outcome: Role-specific dashboard.
+
+Dashboard Navigation
+Tabs: Site_admin ("Employees," "Messages," "Site Playlist," "Intercom"); Admin ("Site Playlist," "Intercom").
+Site Admin Workflow (site_admin)
+Employees: Search/filter/edit (except Password); "Employee info updated."
+Messages: Record/save/delete audio; "Message saved/deleted."
+Site Playlist: Start/stop/volume; "Playlist started/stopped."
+Intercom: On/off mic stream; "Intercom active/ended."
+
+Admin Workflow (admin)
+Site Playlist: Start/stop/volume; "Playlist started/stopped."
+Intercom: On/off mic stream; "Intercom active/ended."
+
+Logout
+Action: Clicks "Logout."
+Outcome: Session ends.
+
+Key Highlights: Site_admin has full control; admin limited to playback/intercom.
